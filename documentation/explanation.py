@@ -1,6 +1,6 @@
 '''
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-|                                                                   |           
+|                                                                   |
 |               ===    =====   =====    =====   =====               |
 |              |         |    |     |     |    |                    |
 |               ===      |    |=====|     |    |=====               |
@@ -9,7 +9,7 @@
 |                                                                   |
 |                                                                   |
 |                                                                   |
-|   |=   =|    =====     =====   |   |    |   |=    |    =====      | 
+|   |=   =|    =====     =====   |   |    |   |=    |    =====      |
 |   | = = |   |     |   |        |   |    |   | =   |   |           |
 |   |  =  |   |=====|   |        |===|    |   |  =  |   |=====      |
 |   |     |   |     |   |        |   |    |   |   = |   |           |
@@ -23,17 +23,22 @@ How does it work ??
 * I will make the logic and etc by hand.
 
 * All the code in this file will be organized in the correct... organization..., 
-and you will notice that all will be organized into the folder state_machine 
-and the files within.
+and you will notice that all will be into the folder state_machine and other files outside 
+documentation folder.
 
-* All shown here will be made in python, it will work, but for implement it in a big 
+* All shown here will be made in python, but for implement it in a big 
 sistem or real life company product, it can be implemented using the functionalities of a 
 database to store the information of the objects and its states for example and other 
 tools.
 
-* All classes and codes with the sufix _v1, _v2 etc are not to be considered as the final 
-version, they are used to ilustrate a idea, to help us build the thought as wee continue 
-to evolve our application.
+* All classes and codes in this file, specially the ones with sufix _v1, _v2 etc are not 
+to be considered to work, but only a visual for ilustrate a idea, to help us build 
+the thought as we continue to evolve our application.
+
+* The _V1 and _V2 sufixes are used to express the evolving of the idea ilustrated in the 
+classes.
+
+* The working project and its classes etc, will be built outside this file.
 '''
 
 '''
@@ -120,7 +125,7 @@ And for this example i will make use of the best practices for typing, validatio
 dependency injection etc...
 '''
 
-from interfaces import BusinessRulesFormat
+from data_classes import BusinessRulesFormat
 from typing import List
 
 
@@ -149,7 +154,7 @@ function, check if the rule you are trying to apply, its valid.
 And of course receive the information necessary for that checking happen.
 '''
 
-class StateMachine:
+class StateMachine_V1:
     def __init__(self, business_rules: List[BusinessRulesFormat]):
         self._business_rules = business_rules
 
@@ -180,21 +185,20 @@ in this case our Customer
 But first lets create our customer.
 '''
 
-class Customer:
+class Customer_V2:
     def __init__(self):
         pass
 
 
 
 
-class StateMachineTest:
+class CustomerStateMachine_V1:
     def __init__(
         self, 
         state: str, 
-        business_rules: List[BusinessRulesFormat]
     ):
         self._state = state
-        self._business_rules = business_rules
+        super().__init__()
 
     def _can_transition(self, destination: str):
         return any(
