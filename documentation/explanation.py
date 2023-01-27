@@ -14,9 +14,10 @@
 |   |  =  |   |=====|   |        |===|    |   |  =  |   |=====      |
 |   |     |   |     |   |        |   |    |   |   = |   |           |
 |   |     |   |     |    =====   |   |    |   |    =|    =====      |
+|                                                                   |
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-How does it work ??
+What it is ??
 
 * For this example i will not make use of the StateMachine extension for Python
 
@@ -27,7 +28,7 @@ and you will notice that all will be into the folder state_machine and other fil
 documentation folder.
 
 * All shown here will be made in python, but for implement it in a big 
-sistem or real life company product, it can be implemented using the functionalities of a 
+sistem or any company product, it can be implemented using the functionalities of python itself or another language, also a 
 database to store the information of the objects and its states for example and other 
 tools.
 
@@ -36,7 +37,7 @@ to be considered to work, but only a visual for ilustrate a idea, to help us bui
 the thought as we continue to evolve our application.
 
 * The _V1 and _V2 sufixes are used to express the evolving of the idea ilustrated in the 
-classes.
+methods.
 
 * The working project and its classes etc, will be built outside this file.
 '''
@@ -121,11 +122,10 @@ But how dows that work ?
 
 First we make the business rules as a form of object
 
-And for this example i will make use of the best practices for typing, validation, 
-dependency injection etc...
+And for this example i will make use of the best practices for typing, validation and etc...
 '''
 
-from data_classes import BusinessRulesFormat
+from data_classes.data_classes import BusinessRulesFormat
 from typing import List
 
 
@@ -176,7 +176,7 @@ Ok our machine is built.
 
 Notice that it works really simple and only for the scope it will be injected into
 
-The generic machine doesnt need to know any of our business rules, it just need 
+The generic machine need to know of our business rules, and need 
 to process what being thwron at it
 
 Now we need to inherith that into the State Machine specific for our aplication, 
@@ -186,27 +186,139 @@ But first lets create our customer.
 '''
 
 class Customer_V2:
-    def __init__(self):
-        pass
+    def __init__(self, customer_data: dict):
+        self.name = customer_data['name']
+        self.email = customer_data['email']
+        self.id_number = customer_data['id_number']
+        self._payment_status = customer_data['payment_status']
+        self._document_status = customer_data['document_status']
+
+        # we can also inserto more data into our customer if we want
+
+    def print_information(self):
+        print(f'''Customer: {self.name}, of ID: {self.id_number}. 
+            Has Payment: {self.payment_status} and Document: {self.document_status}''')
+
+    # GET & SET ----->
+    # @property
+    # def name(self):
+    #     return self.name
+
+    # @name.setter
+    # def name(self, name: str):
+    #     self.name = name
+
+
+    # @property
+    # def email(self):
+    #     return self.email
+
+    # @email.setter
+    # def email(self, email: str):
+    #     self.email = email
+
+
+    # @property
+    # def id_number(self):
+    #     return self.id_number
+
+    # @id_number.setter
+    # def id_number(self, id_number: str):
+    #     self.id_number = id_number
+    # <----- GET & SET
 
 
 
+'''
+Notice that the Customer can now have its status registered, but he cant change them.
+And for the system from now on, it will only be able to change its stats by the machine.
 
-class CustomerStateMachine_V1:
-    def __init__(
-        self, 
-        state: str, 
-    ):
-        self._state = state
-        super().__init__()
+To do this, it will have to make an implementation of a new state machine, made for the customer.
+For that, wee need to think the following:
 
-    def _can_transition(self, destination: str):
-        return any(
-            [rule['destination'] == destination and
-             rule['source'] == self._state for 
-             rule in self._business_rules
-            ]
-        )
+* The machine will change a data inside the Customer
+
+* The customer its a class for himself
+
+So with that in mind we can trigger the change of the status in the Customer, 
+but it can only be triggered and pass down arguments and data by the StateMachine.
+
+We will implement now the get & setters for the customer data, and ignore the previous get and setters made
+to focus on the status ones.
+'''
+
+    
+class Customer_V3:
+    def __init__(self, customer_data: dict):
+        self.name = customer_data['name']
+        self.email = customer_data['email']
+        self.id_number = customer_data['id_number']
+        self._payment_status = customer_data['payment_status']
+        self._document_status = customer_data['document_status']
+
+        # we can also inserto more data into our customer if we want
+
+
+    # GET & SET ----->
+    @property
+    def payment_status(self):
+        return self._payment_status
+
+    @payment_status.setter
+    def payment_status(self, payment_status: str):
+        self._payment_status = payment_status
+
+
+    @property
+    def document_status(self):
+        return self._document_status
+
+    @document_status.setter
+    def document_status(self, document_status: str):
+        self._document_status = document_status
+    # <----- GET & SET
+
+    def print_information(self):
+        print(f'''Customer: {self.name}, of ID: {self.id_number}. 
+            Has Payment: {self.payment_status} and Document: {self.document_status}''')
+
+
+'''
+Now we will be making the customer state machine.
+
+'''
+
+
+class CustomerStateMachine_V1(StateMachine_V1):
+    def __init__(self, business_rules: List[BusinessRulesFormat], customer: Customer_V3):
+        super().__init__(business_rules)
+        self._customer = customer
+
+    def validate_status(self, status: str):
+        if status not in [
+            'Not payed',
+            'Payment confirmed',
+            'Payment denied',
+            'Payment issued',
+            'Payment waiting validation',
+            'Payment expired',
+        ]:
+            raise ValueError("Status inexistente na base atual.")
+        return True
+
+    def _general_validate(self, desired_step: str):
+        self.validate_status(desired_step)
+        self._validate_transition(self._customer.payment_status, self.desired_step)
+
+    def make_transition(self, desired_step: str):
+        self._general_validate(desired_step)
+        customer._payment_status = desired_step
+
+
+'''
+Now we implement the integration of these machines:
+
+'''
 
     
 class VideoStateMachine(StateMachine):
