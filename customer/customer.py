@@ -16,16 +16,6 @@ class Customer:
 	def payment_status(self, payment_status: str):
 		self._payment_status = payment_status
 
-
-	# @property
-	# def document_status(self):
-	# 	return self._document_status
-
-	# @document_status.setter
-	# def document_status(self, document_status: str):
-	# 	self._document_status = document_status
-	# <----- GET & SET
-
 	@property
 	def name(self):
 		return self._name
