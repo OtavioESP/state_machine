@@ -1,8 +1,8 @@
 from customer.customer import Customer
 from state_machine.state_machine import CustomerStateMachine
-from data_classes import status, rules
+from data_classes import status, rules, data_classes
 
-dados = {'name': 'Otavio', 'email': 'otavio@a.com'}
+dados: data_classes.CustomerDataClass = {'name': 'Otavio', 'email': 'otavio@a.com'}
 
 usuario = Customer(dados)
 usuario.print_information()
@@ -17,3 +17,5 @@ customer_machine = CustomerStateMachine(rules.rules, usuario)
 customer_machine.print_everything()
 
 customer_machine.make_transition('Payment confirmed')
+
+customer_machine.print_everything()

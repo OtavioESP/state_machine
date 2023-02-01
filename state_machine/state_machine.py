@@ -43,4 +43,4 @@ class CustomerStateMachine(StateMachine):
 		self._customer.payment_status = desired_step
 
 	def print_everything(self):
-		print(f'{self._customer._name} / {self._business_rules}')
+		print(f'{self._customer._name} -> {self._customer.payment_status} / {self._business_rules}')
