@@ -83,34 +83,34 @@ to store the dinamism of information needed to validate the steps.
 Lets work with just these 3 rules for now.
 With that in mind lets build a rustic instance of my product.
  
+```
+class Customer_V1:
+   def __init__(self, payment, document):
+       self.is_not_payed = True
+       self.is_payment_confirmed = False
+       self.is_payment_denied = False
+       self.is_payment_issued = False
+       self.is_waiting_payment_validation = False
+       self.is_payment_expired = False
 
-# class Customer_V1:
-#    def __init__(self, payment, document):
-#        self.is_not_payed = True
-#        self.is_payment_confirmed = False
-#        self.is_payment_denied = False
-#        self.is_payment_issued = False
-#        self.is_waiting_payment_validation = False
-#        self.is_payment_expired = False
+   def confirm_payment(self):
+       if self.is_waiting_validation == True:
+           self.is_payment_confirmed = True
+       else:
+           raise Exception
 
-#    def confirm_payment(self):
-#        if self.is_waiting_validation == True:
-#            self.is_payment_confirmed = True
-#        else:
-#            raise Exception
+   def denie_payment(self):
+       if self.is_waiting_validation == True:
+           self.is_payment_denied = True
+       else:
+           raise Exception
 
-#    def denie_payment(self):
-#        if self.is_waiting_validation == True:
-#            self.is_payment_denied = True
-#        else:
-#            raise Exception
-
-#    def issue_payment(self):
-#        if self.is_payment_expired == True or self.is_payment_denied == True:
-#            self.is_payment_issued = True
-#        else:
-#            raise Exception
-
+   def issue_payment(self):
+       if self.is_payment_expired == True or self.is_payment_denied == True:
+           self.is_payment_issued = True
+       else:
+           raise Exception
+```
 
 Ok, we just saw that the its a lot of trouble to make the functions and validations 
 just for simple transitions.
@@ -125,16 +125,17 @@ First we make the business rules as a form of object
 And for this example i will make use of the best practices for typing, validation and etc...
 
 
-# from typing import List
 
+```
+from typing import List
 
-# business_rules: = [
-#    {'source': 'Waiting payment validation', 'destination': 'Payment confirmed'}, 
-#    {'source': 'Waiting payment validation', 'destination': 'Payment denied'}, 
-#    {'source': 'Payment expired', 'destination': 'Payment issued'},
-#    {'source': 'Payment denied', 'destination': 'Payment issued'}
-# ]
-
+ business_rules: = [
+    {'source': 'Waiting payment validation', 'destination': 'Payment confirmed'}, 
+    {'source': 'Waiting payment validation', 'destination': 'Payment denied'}, 
+    {'source': 'Payment expired', 'destination': 'Payment issued'},
+    {'source': 'Payment denied', 'destination': 'Payment issued'}
+ ]
+```
 
 Ok, rules implemented folowing the `BusinessRulesFormat` interface.
 Now we will have to make the state machine.
@@ -152,23 +153,23 @@ function, check if the rule you are trying to apply, its valid.
 
 And of course receive the information necessary for that checking happen.
 
+```
+class StateMachine_V1:
+    def __init__(self, business_rules: List[]):
+       self._business_rules = business_rules
 
-# class StateMachine_V1:
-#    def __init__(self, business_rules: List[]):
-#       self._business_rules = business_rules
-#
-#    def _validate_transition(self, current_state: str, destination_state: str, ) -> bool:
-#        
-#        Check if the desired state and the current state, match within any of the business rules
-#        
-#        return any(
-#            [   
-#                rule['destination'] == destination_state and
-#                rule['source'] == current_state 
-#                for rule in self._business_rules
-#            ]
-#        )
-
+    def _validate_transition(self, current_state: str, destination_state: str, ) -> bool:
+        
+        Check if the desired state and the current state, match within any of the business rules
+        
+        return any(
+            [   
+                rule['destination'] == destination_state and
+                rule['source'] == current_state 
+                for rule in self._business_rules
+            ]
+        )
+```
 
 Ok our machine is built.
 
@@ -182,15 +183,15 @@ in this case our Customer
 
 But first lets create our customer.
 
-
-# class Customer_V2:
-#    def __init__(self, customer_data: dict):
-#        self.name = customer_data['name']
-#        self.email = customer_data['email']
-#        self.id_number = customer_data['id_number']
-#        self._payment_status = customer_data['payment_status']
-#        self._document_status = customer_data['document_status']
-
+```
+class Customer_V2:
+   def __init__(self, customer_data: dict):
+       self.name = customer_data['name']
+       self.email = customer_data['email']
+       self.id_number = customer_data['id_number']
+       self._payment_status = customer_data['payment_status']
+       self._document_status = customer_data['document_status']
+```
 we can also insert more data into our customer if we want
 
 
@@ -214,55 +215,58 @@ but it can only be triggered and pass down arguments and data by the StateMachin
 We will implement now the get & set for the customer states.
 
 
-    
-# class Customer_V3:
-#    def __init__(self, customer_data: dict):
-#        self.name = customer_data['name']
-#        self.email = customer_data['email']
-#        self.id_number = customer_data['id_number']
-#        self._payment_status = customer_data['payment_status']
+```
+class Customer_V3:
+  def __init__(self, customer_data: dict):
+       self.name = customer_data['name']
+       self.email = customer_data['email']
+       self.id_number = customer_data['id_number']
+       self._payment_status = customer_data['payment_status']
 
-#    @property
-#    def payment_status(self):
-#        return self._payment_status
+  @property
+  def payment_status(self):
+       return self._payment_status
 
-#    @payment_status.setter
-#    def payment_status(self, payment_status: str):
-#        self._payment_status = payment_status
+  @payment_status.setter
+  def payment_status(self, payment_status: str):
+      self._payment_status = payment_status
 
-#    def print_information(self):
-#        print(f'''Customer: {self.name}, of ID: {self.id_number}. 
-#            Has Payment: {self.payment_status}''')
-
+	def print_information(self):
+      print(f'''Customer: {self.name}, of ID: {self.id_number}. 
+            Has Payment: {self.payment_status}''')
+```
 
 
 Now we will be making the customer state machine.
 
 
+```
+class CustomerStateMachine_V1(StateMachine_V1):
+	def __init__(self, business_rules: , customer: Customer_V3):
+			self._customer = customer
+			super().__init__(business_rules)
 
-# class CustomerStateMachine_V1(StateMachine_V1):
-#    def __init__(self, business_rules: , customer: Customer_V3):
-#        self._customer = customer
-#        super().__init__(business_rules)
 
 make shure we inherit the business rules for the state machine
 
-#    def validate_status(self, status: str):
-#        if status not in [
-#            'Not payed',
-#            'Payment confirmed',
-#            'Payment denied',
-#            'Payment issued',
-#            'Payment waiting validation',
-#            'Payment expired',
-#        ]:
-#            raise ValueError("Status inexistente na base atual.")
-#        return True
 
-#    def _general_validate(self, desired_step: str):
-#        self.validate_status(desired_step)
-#        self._validate_transition(self._customer.payment_status, self.desired_step)
+	def validate_status(self, status: str):
+			if status not in [
+					'Not payed',
+					'Payment confirmed',
+					'Payment denied',
+					'Payment issued',
+					'Payment waiting validation',
+					'Payment expired',
+			]:
+					raise ValueError("Status inexistente na base atual.")
+			return True
 
-#    def make_transition(self, desired_step: str):
-#        self._general_validate(desired_step)
-#        self._customer._payment_status = desired_step
+	def _general_validate(self, desired_step: str):
+			self.validate_status(desired_step)
+			self._validate_transition(self._customer.payment_status, self.desired_step)
+
+	def make_transition(self, desired_step: str):
+			self._general_validate(desired_step)
+			self._customer._payment_status = desired_step
+```
