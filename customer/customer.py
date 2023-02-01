@@ -26,10 +26,3 @@ class Customer:
 
 	def print_information(self):
 		print(f'Name: {self._name}, Email: {self._email}')
-
-
-
-
-
-
-

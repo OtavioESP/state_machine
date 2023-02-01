@@ -40,7 +40,6 @@ class CustomerStateMachine(StateMachine):
 
 	def make_transition(self, desired_step: str):
 		self._general_validate(desired_step)
-		breakpoint()
 		self._customer.payment_status = desired_step
 
 	def print_everything(self):
