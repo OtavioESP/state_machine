@@ -242,7 +242,7 @@ Now we will be making the customer state machine.
 
 ```
 class CustomerStateMachine_V1(StateMachine_V1):
-	def __init__(self, business_rules: , customer: Customer_V3):
+	def __init__(self, business_rules, customer: Customer_V3):
 			self._customer = customer
 			super().__init__(business_rules)
 
