@@ -1,2 +1,2 @@
-MUDAR OS ARQUIVOS RULES E STATUS PARA JSONS, E FAZER UM ARQUIVO PARA LER ELES
-OU UM SQLITE PARA LER ELES E PEGAR OS DADOS REFERENTES AOS STATUS
+As im not using any database in the process, i choose to use the business rules and states etc as a Json on a python file. 
+It could be used in other ways, such as .json file, or sqlite data and etc.
