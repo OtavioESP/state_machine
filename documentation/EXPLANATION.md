@@ -75,7 +75,7 @@ But lets get more complicated.
 3. A payment can only be issued when its Expired or Denied;
 
 This businenss rule intrinsically has 2 validations just for her.
-SO now wee ned two fields on the customer instance for checking it out.
+SO now wee need two fields on the customer instance for checking it out.
 
 And as the business rules grow in number, the booleans in my Customer need to grow 
 to store the dinamism of information needed to validate the steps.
@@ -127,9 +127,8 @@ And for this example i will make use of the best practices for typing, validatio
 
 
 ```
-from typing import List
 
- business_rules: = [
+ business_rules = [
     {'source': 'Waiting payment validation', 'destination': 'Payment confirmed'}, 
     {'source': 'Waiting payment validation', 'destination': 'Payment denied'}, 
     {'source': 'Payment expired', 'destination': 'Payment issued'},
@@ -137,7 +136,7 @@ from typing import List
  ]
 ```
 
-Ok, rules implemented folowing the `BusinessRulesFormat` interface.
+Ok, rules implemented folowing the `BusinessRulesFormat` interface. ( check the data_classes folder )
 Now we will have to make the state machine.
 
 How does it work, it isolates the states of the object you want to analyze and 
@@ -231,7 +230,7 @@ class Customer_V3:
   def payment_status(self, payment_status: str):
       self._payment_status = payment_status
 
-	def print_information(self):
+  def print_information(self):
       print(f'''Customer: {self.name}, of ID: {self.id_number}. 
             Has Payment: {self.payment_status}''')
 ```
