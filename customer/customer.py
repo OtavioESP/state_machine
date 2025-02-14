@@ -7,7 +7,7 @@ class Customer:
 		self._name = customer_data['name']
 		self._email = customer_data['email']
 
-	# GET & SET ----->
+	# GETER & SETER ----->
 	@property
 	def payment_status(self):
 		return self._payment_status
